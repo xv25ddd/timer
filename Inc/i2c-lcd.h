@@ -1,5 +1,7 @@
 #include "stm32f0xx_hal.h"
 
+inline bool lcd_backlight;
+
 void lcd_init (void);   // initialize lcd
 
 void lcd_send_cmd (char cmd);  // send command to the lcd

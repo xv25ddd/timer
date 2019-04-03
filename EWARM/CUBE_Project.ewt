@@ -1196,6 +1196,15 @@
         <group>
             <name>User</name>
             <file>
+                <name>$PROJ_DIR$\..\Src\eeprom24xx.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Inc\eeprom24xx.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Inc\eeprom24xxConfig.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\Src\i2c-lcd.c</name>
             </file>
             <file>
@@ -1216,9 +1225,6 @@
         <name>Drivers</name>
         <group>
             <name>CMSIS</name>
-            <file>
-                <name>$PROJ_DIR$\..\Src\system_stm32f0xx.c</name>
-            </file>
         </group>
         <group>
             <name>STM32F0xx_HAL_Driver</name>
@@ -1269,6 +1275,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\Drivers\STM32F0xx_HAL_Driver\Src\stm32f0xx_hal_tim_ex.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Src\system_stm32f0xx.c</name>
             </file>
         </group>
     </group>

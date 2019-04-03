@@ -46,6 +46,8 @@
 #include <string>
 #include <cstring>
 #include "i2c-lcd.h"
+#include "eeprom24xx.h"
+
 
 /* USER CODE END Includes */
 
@@ -109,11 +111,11 @@ I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN PV */
-  int in=0;
-  int out=0;
+ // int in=0;
+ // int out=0;
   //
-    RTC_TimeTypeDef sTime = {0};
-    RTC_DateTypeDef sDate = {0};
+ //   RTC_TimeTypeDef sTime = {0};
+ //   RTC_DateTypeDef sDate = {0};
     //
 int _tim14=0;
 //int _tim14_1=0;
@@ -124,7 +126,7 @@ int hours=0;int minutes=0;int seconds=0;
 //
 char buff_char[20];
 //char buff_char_1=0;
-int buff_int=255;
+uint8_t buff_int=255;
 //
 enum{
   rele_1,
@@ -143,9 +145,12 @@ enum{
 
 int settings_rele[rele_4+1][value_4+1];
 bool on_off[4]={0,0,0,0};
-const int max_rele=4;
+const uint8_t max_rele=4;
+//for memory
+//  uint16_t		WriteData[1]={5000};//WriteData[8]={0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+//  uint16_t		ReadData[1]={0};
 //
-
+  
 
 
 /* USER CODE END PV */
@@ -164,9 +169,10 @@ static void MX_TIM14_Init(void);
 
 
 
-   int gr_out=0;//group out
-   int gr_in=0;
+   
 int matrix_keypad(){
+  int gr_out=0;//group out
+  int gr_in=0;
   //gr_out=0; gr_in=0;
   //cross-scan matrix keypad
   /*
@@ -368,23 +374,65 @@ int main(void)
 
   HAL_TIM_Base_Start(&htim14);
   HAL_TIM_Base_Start_IT(&htim14);
-  
   HAL_Delay(200);
   R1_HIGH;
   HAL_Delay(200);
   R2_HIGH;
+  
+  
+  lcd_init(); 
+  HAL_Delay(500);
+  /////////////////////
+//uint16_t		WriteData[1]={5000};//WriteData[8]={0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+  uint8_t		ReadData[1]={1};
+
+  	while(EEPROM24XX_IsConnected()==false)
+	{
+		HAL_Delay(100);
+	}
+
+	//EEPROM24XX_Save(0,WriteData,16);
+	//EEPROM24XX_Load(1,ReadData,16);
+        
+        //uint8_t counter_for_read_data=0;  
+        for(uint8_t i=0, counter_for_read_data=0;i<max_rele;i++){
+          for(uint8_t o=0;o<5;o++){
+            EEPROM24XX_Load(counter_for_read_data, ReadData, 8);
+            //if(ReadData[0]>100)ReadData[0]=1;
+            settings_rele[i][o]=ReadData[0];
+            counter_for_read_data++;
+            HAL_Delay(20);
+          }
+        }
+        
+        
+        
+        LCD_CLEAR;
+        
+        //sprintf(buff_char, "%d", ReadData[0]);
+        //lcd_send_string("   ");
+        //lcd_send_string(buff_char);
+        HAL_Delay(500);
+  //
+  //uint8_t buff = 0x00;
+  //buff = (buff <<4)|0x04|0x00|0x00|0x00;
+  lcd_backlight=0;
+  //uint8_t i[1] = {0x08};
+  //i[1] = buff;
+  
+  //
+  //HAL_I2C_Master_Transmit(&hi2c1, 0x4E, i, 1, 1000);
   HAL_Delay(200);
   R3_HIGH;
   HAL_Delay(200);
   R4_HIGH;
   
-  lcd_init(); 
-  HAL_Delay(500);
-
   while (1)
   {
     if((matrix_keypad())!=255){
-      buff_int = matrix_keypad();  
+      buff_int = matrix_keypad();
+      lcd_backlight=1;
+      lcd_send_cmd(0x00);
       ///////
       //KEY//
       ///////
@@ -400,15 +448,19 @@ int main(void)
       else if(buff_int==14){
         set_time();
       }
+
+      else if(buff_int==15){
+        sprintf(buff_char, "%d", ReadData[0]);        
+        lcd_send_string(buff_char);
+        HAL_Delay(1000);
+      }
       else if(buff_int<5&&buff_int>0){
         rele_settings(buff_int);
       }
+      
       ///////////
       //end KEY//
-      ///////////
-      //gr_out=0; gr_in=0;
-      //HAL_Delay(500);
-      LCD_CLEAR;
+      ///////////      
     }//end of matrix_keypad!=255
     if(_tim14>5){
 //      releys_check();
@@ -419,17 +471,9 @@ int main(void)
       for(int i=0;i<4;i++){
         sprintf(buff_char, "%d", on_off[i]);
         lcd_send_string(buff_char);
-        lcd_send_string("|");
+        lcd_send_string("|");        
       }
-      LCD_LINE_2;
-      /*
-      DS1307_ReadData();
-      for(int i=0;i<7;i++){
-        sprintf(buff_char, "%d", DS1307_Read[i]);
-        lcd_send_string(buff_char);
-        lcd_send_string(":");
-      }
-*/
+      LCD_LINE_2;    
         sprintf(buff_char, "%d", hours);
         lcd_send_string(buff_char);
         lcd_send_string(":");
@@ -438,10 +482,11 @@ int main(void)
         lcd_send_string(":");
         sprintf(buff_char, "%d", seconds);
         lcd_send_string(buff_char);
-
+        lcd_backlight=0;
+        lcd_send_cmd(0x00);
     }
     HAL_Delay(100);
-      
+ 
       //gr_out=0; gr_in=0;     
     /* USER CODE END WHILE */
 
@@ -505,6 +550,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
+
 static void MX_I2C1_Init(void)
 {
 
@@ -645,7 +691,8 @@ static void MX_GPIO_Init(void)
 /////////
 //
 void rele_settings(int num_rele){
-  int counter_for_menu=0;
+  uint8_t counter_for_menu=0;
+  bool change_check=0;
   num_rele = num_rele-1;
   while(1){
     HAL_Delay(250);
@@ -727,6 +774,7 @@ void rele_settings(int num_rele){
       }
       //
       else if(buff_int==13){
+        change_check=1;
         if(counter_for_menu==0){
           if(settings_rele[num_rele][rele_mode]==0)
             settings_rele[num_rele][rele_mode]=1;
@@ -736,30 +784,46 @@ void rele_settings(int num_rele){
         //
         else if(counter_for_menu==1){
           settings_rele[num_rele][value_1]=entering_num(
-                                                        settings_rele[num_rele][value_1]
-                                                        );
+           settings_rele[num_rele][value_1]
+           );
         }
         else if(counter_for_menu==2){
           settings_rele[num_rele][value_2]=entering_num(
-                                                        settings_rele[num_rele][value_2]
-                                                        );
+           settings_rele[num_rele][value_2]
+           );
         }
         else if(counter_for_menu==3){
           settings_rele[num_rele][value_3]=entering_num(
-                                                        settings_rele[num_rele][value_3]
-                                                        );
+           settings_rele[num_rele][value_3]
+           );
         }
         else if(counter_for_menu==4){
           settings_rele[num_rele][value_4]=entering_num(
-                                                        settings_rele[num_rele][value_4]
-                                                        );
+           settings_rele[num_rele][value_4]
+           );
         }
         //
       }
       //
     }
   }
-}
+
+  if(change_check==1){
+    uint8_t block_addr=0;
+    uint16_t WriteData[1]={0};
+    //set block_addr
+    if(num_rele==0)block_addr=0;
+    else if(num_rele==1)block_addr=5;
+    else if(num_rele==2)block_addr=10;
+    else if(num_rele==3)block_addr=15;    
+    for(int o=block_addr, j=0; o<block_addr+5; o++, j++){
+      WriteData[0]=settings_rele[num_rele][j];
+      EEPROM24XX_Save(block_addr+j, WriteData, 8);
+    }
+  }
+
+}//end of rele_settings
+//
 int buff_to_releys_check[4]={0,0,0,0};
 void releys_check(){
   int summary_minute=hours*60+minutes,
@@ -772,8 +836,10 @@ void releys_check(){
       if(buff_to_releys_check[i]==0)
           buff_to_releys_check[i]=summary_minute;
       difference=summary_minute-buff_to_releys_check[i];
+      //
       if(difference<1)difference=
         difference+1439;
+            
       //
       if(on_off[i]==0){
         if(difference==settings_rele[i][value_1]){
@@ -815,7 +881,8 @@ void releys_check(){
   //
   if(on_off[3]==0)R4_HIGH;
   if(on_off[3]==1)R4_LOW;  
-}
+}//end releys check
+/////////////////////////////////////
 void set_time(){
   int counter=0; 
   while(1){

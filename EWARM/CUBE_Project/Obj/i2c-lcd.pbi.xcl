@@ -1,21 +1,21 @@
-"C:\Users\xv\Documents\cube_projects\CUBE_Project\Src\i2c-lcd.c"
+"C:\Users\xv\Documents\GitHub\timer\Src\i2c-lcd.c"
 -std=c++14
 -ferror-limit=0
 -fbracket-depth=512
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Src
+C:\Users\xv\Documents\GitHub\timer\Src
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Inc
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Inc
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Src
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Src
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Drivers/STM32F0xx_HAL_Driver/Inc
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Drivers/STM32F0xx_HAL_Driver/Inc
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Drivers/CMSIS/Device/ST/STM32F0xx/Include
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Drivers/CMSIS/Device/ST/STM32F0xx/Include
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\EWARM/../Drivers/CMSIS/Include
+C:\Users\xv\Documents\GitHub\timer\EWARM/../Drivers/CMSIS/Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\Core\Include
 -I
@@ -27,17 +27,17 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\inc\c
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\inc\cpp
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Inc
+C:\Users\xv\Documents\GitHub\timer\Inc
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Src
+C:\Users\xv\Documents\GitHub\timer\Src
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Drivers\STM32F0xx_HAL_Driver\Inc
+C:\Users\xv\Documents\GitHub\timer\Drivers\STM32F0xx_HAL_Driver\Inc
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Drivers\STM32F0xx_HAL_Driver\Inc\Legacy
+C:\Users\xv\Documents\GitHub\timer\Drivers\STM32F0xx_HAL_Driver\Inc\Legacy
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Drivers\CMSIS\Device\ST\STM32F0xx\Include
+C:\Users\xv\Documents\GitHub\timer\Drivers\CMSIS\Device\ST\STM32F0xx\Include
 -I
-C:\Users\xv\Documents\cube_projects\CUBE_Project\Drivers\CMSIS\Include
+C:\Users\xv\Documents\GitHub\timer\Drivers\CMSIS\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CMSIS\Core\Include
 -I
